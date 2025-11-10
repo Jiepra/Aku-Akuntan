@@ -11,6 +11,7 @@ import Pembelian from '@/components/Pembelian';
 import Beban from '@/components/Beban';
 import Jurnal from '@/components/Jurnal';
 import Laporan from '@/components/Laporan';
+import AIAssistant from '@/components/AIAssistant';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -59,6 +60,7 @@ const Index = () => {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 overflow-auto pb-20 md:pb-0">
         {renderContent()}
+        <AIAssistant />
       </main>
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>

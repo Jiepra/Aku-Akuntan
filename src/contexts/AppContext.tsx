@@ -9,6 +9,7 @@ import { CollectionReference, collection, addDoc, onSnapshot, query, orderBy, Ti
 import { db, auth, authenticateFirebase, localAppId } from '../firebaseConfig';
 import { initialChartOfAccounts } from '../data/accounts';
 import { Account, AccountType, JournalEntryLine, JournalTransaction, ActualFinancialSummary, JournalEntryInput, JournalEntryUI } from '../types/AccountingTypes';
+import { aiService, FinancialData } from '../lib/aiService';
 
 // Existing Interfaces (dipertahankan seperti sebelumnya)
 export interface Product {
@@ -119,6 +120,7 @@ interface AppContextType {
   getFinancialSummary: () => ActualFinancialSummary;
   getFinancialSummaryByPeriod: (startDate: string, endDate: string) => ActualFinancialSummary;
   getAccountsData: () => AccountsData;
+  askAI: (question: string) => Promise<string>;
 }
 
 const getScopedKey = (key: string, user: string) => `${user}_${key}`;
@@ -804,6 +806,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
 
+  const askAI = async (question: string): Promise<string> => {
+    if (!userId) {
+      return "Anda harus login terlebih dahulu untuk menggunakan fitur AI.";
+    }
+    
+    const financialData: FinancialData = {
+      products,
+      transactions,
+      purchases,
+      expenses
+    };
+    
+    return await aiService.processQuestion(question, financialData);
+  };
+
   const value: AppContextType = {
     userId,
     accounts,
@@ -829,7 +846,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     deleteExpense,
     getFinancialSummary,
     getFinancialSummaryByPeriod,
-    getAccountsData
+    getAccountsData,
+    askAI
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
