@@ -138,9 +138,16 @@ Aplikasi "Akuakuntan" juga dilengkapi dengan fitur kecerdasan buatan (AI) yang d
 - **Fungsionalitas**: Mengakses data keuangan (produk, transaksi, pembelian, beban) dari context dan mengirimkannya ke AI untuk diproses
 
 ### 4. UI Component
-- **File**: `src/components/AIAssistant.tsx`
-- **Fungsi**: Menyediakan antarmuka chatting untuk berinteraksi dengan AI
-- **Fitur**: Riwayat percakapan, tampilan real-time, dan respons otomatis
+- **File**: `src/components/AIChatDialog.tsx` (komponen terbaru)
+  - Fungsi: Menyediakan antarmuka chatting dalam bentuk dialog yang bisa dibuka/ditutup
+  - Fitur: Riwayat percakapan, tampilan real-time, auto-scroll, respons otomatis, animasi loading, dan tombol close
+  - Tampilan: Dialog dengan header, area pesan yang bisa discroll, dan input di bagian bawah
+
+### 5. Implementasi di Halaman Utama
+- **File**: `src/pages/Index.tsx`
+- **Fungsi**: Menyediakan tombol untuk membuka chat AIChatDialog (muncul di sisi kanan bawah)
+- **Lokasi tombol**: Di sisi kanan bawah, di atas tombol navigasi bawah
+- **Tampilan**: Ketika tombol ditekan, dialog chat muncul dengan tampilan yang rapi dan bisa discroll
 
 ## Cara Mengatur API Key
 
