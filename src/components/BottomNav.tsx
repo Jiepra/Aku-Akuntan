@@ -1,11 +1,10 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  Receipt, 
-  ShoppingBag, 
-  TrendingUp, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Receipt,
+  ShoppingBag,
   FileText,
   ArrowDownCircle
 } from 'lucide-react';
@@ -23,7 +22,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab }) => {
     { id: 'kasir', label: 'Kasir', icon: ShoppingCart },
     { id: 'transaksi', label: 'Transaksi', icon: Receipt },
     { id: 'beban', label: 'Beban', icon: ArrowDownCircle },
-    { id: 'jurnal', label: 'Jurnal', icon: TrendingUp },
     { id: 'laporan', label: 'Laporan', icon: FileText },
   ];
 

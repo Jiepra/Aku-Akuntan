@@ -4,7 +4,25 @@
 
 **URL**: https://lovable.dev/projects/f8a0d32b-db8d-48ba-8a7d-278e761e9e6e
 
-## How can I edit this code?
+## Project Setup
+
+### Environment Configuration
+
+This project requires environment variables for Firebase and Google AI API. Follow these steps:
+
+1. Create a `.env` file in the root directory (this file is git-ignored for security)
+
+2. Copy the content from `.env.example` to your `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Update the values in your `.env` file with your actual API keys:
+   - `VITE_FIREBASE_API_KEY`: Your Firebase API key
+   - `VITE_GOOGLE_AI_API_KEY`: Your Google AI API key
+   - Other Firebase configuration values as needed
+
+### How can I edit this code?
 
 There are several ways of editing your application.
 
@@ -32,7 +50,10 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Configure environment variables (see Environment Configuration section above)
+# Copy .env.example to .env and update with your API keys
+
+# Step 5: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 

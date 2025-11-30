@@ -9,8 +9,7 @@ import Kasir from '@/components/Kasir';
 import Transaksi from '@/components/Transaksi';
 import Pembelian from '@/components/Pembelian';
 import Beban from '@/components/Beban';
-import Jurnal from '@/components/Jurnal';
-import Laporan from '@/components/Laporan';
+import ReportPOS from '@/components/ReportPOS';
 import { AIChatDialog } from '@/components/AIChatDialog';
 import { Button } from '@/components/ui/button';
 import { Bot } from 'lucide-react';
@@ -46,10 +45,8 @@ const Index = () => {
         return <Pembelian />;
       case 'beban':
         return <Beban />;
-      case 'jurnal':
-        return <Jurnal />;
       case 'laporan':
-        return <Laporan />;
+        return <ReportPOS />;
       default:
         return <Dashboard />;
     }
@@ -63,8 +60,8 @@ const Index = () => {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 overflow-auto pb-20 md:pb-0">
         {renderContent()}
-        <Button 
-          onClick={() => setChatOpen(true)} 
+        <Button
+          onClick={() => setChatOpen(true)}
           className="fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-full"
           size="sm"
         >

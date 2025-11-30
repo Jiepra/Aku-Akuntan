@@ -77,16 +77,12 @@ const Auth = () => {
 
             <div className="relative z-10">
               <div className="mb-8">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4">
-                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <div className="w-4 h-4 bg-white rounded-sm transform rotate-45"></div>
-                  </div>
-                </div>
+                <img src="/Finsera.svg" alt="Finsera Logo" className="h-16 w-auto mb-4" />
                 <h1 className="text-3xl font-bold text-white mb-2">Welcome to</h1>
-                <h2 className="text-4xl font-bold text-white">Akuakuntan</h2>
+                <h2 className="text-4xl font-bold text-white">Finsera</h2>
               </div>
               <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
-                Selamat datang di sistem akuntansi sederhana berbasis browser.
+                Selamat datang di sistem POS Berbasis Website Canggih.
               </p>
             </div>
           </div>

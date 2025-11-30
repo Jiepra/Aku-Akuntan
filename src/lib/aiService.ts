@@ -24,16 +24,19 @@ class AIService {
    * Mengirim permintaan ke Google AI API
    */
   private async callAI(prompt: string): Promise<AIResponse> {
+    // Validasi API key sebelum melakukan permintaan
+    if (!this.config.apiKey) {
+      console.error('Google AI API key is not configured. Please set VITE_GOOGLE_AI_API_KEY in your .env file.');
+      return {
+        text: 'Maaf, fitur AI belum diaktifkan karena API key tidak tersedia. Harap hubungi administrator atau pastikan konfigurasi API sudah benar.'
+      };
+    }
+
     let lastError: Error | null = null;
 
     // Retry logic
     for (let attempt = 0; attempt < this.config.maxRetries; attempt++) {
       try {
-        // Validasi API key
-        if (!this.config.apiKey) {
-          throw new Error('API key tidak ditemukan. Harap atur VITE_GOOGLE_AI_API_KEY di file .env');
-        }
-
         const requestBody = {
           contents: [{
             parts: [{
@@ -78,7 +81,7 @@ class AIService {
           } catch (e) {
             errorText = await response.text();
           }
-          
+
           console.error('Error dari API:', errorText);
           // Tambahkan delay sebelum mencoba kembali untuk kasus error
           if (response.status === 503 || response.status >= 500) {
@@ -90,7 +93,7 @@ class AIService {
 
         const data = await response.json();
         console.log('Respons dari AI API:', data); // Log respons lengkap
-        
+
         if (data.candidates && data.candidates.length > 0) {
           const text = data.candidates[0].content.parts[0].text;
           return { text };
@@ -123,14 +126,14 @@ class AIService {
       if (lastError instanceof Error) {
         // Jika error adalah "The model is overloaded", berikan pesan yang lebih ramah
         if (lastError.message.includes('The model is overloaded')) {
-          return { 
-            text: 'Maaf, saat ini asisten AI sedang sibuk. Silakan coba beberapa saat lagi. Anda tetap dapat menggunakan fitur lain dari aplikasi.' 
+          return {
+            text: 'Maaf, saat ini asisten AI sedang sibuk. Silakan coba beberapa saat lagi. Anda tetap dapat menggunakan fitur lain dari aplikasi.'
           };
         }
         return { text: `Maaf, terjadi kesalahan saat memproses permintaan. Silakan coba lagi nanti.` };
       }
     }
-    
+
     return { text: 'Maaf, terjadi kesalahan saat memproses permintaan. Silakan coba lagi nanti.' };
   }
 
@@ -143,23 +146,23 @@ class AIService {
     const transactions = financialData.transactions.slice(0, 10); // Batasi jumlah transaksi
     const purchases = financialData.purchases.slice(0, 10); // Batasi jumlah pembelian
     const expenses = financialData.expenses.slice(0, 10); // Batasi jumlah beban
-    
-    const formattedProducts = products.map(p => 
+
+    const formattedProducts = products.map(p =>
       `Nama: ${p.name}, Kategori: ${p.category}, Harga: ${p.price}, Harga Pokok: ${p.cost}, Stok: ${p.stock}`
     ).join('\n');
 
     // Include today's date for better context
     const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-    
-    const formattedTransactions = transactions.map(t => 
+
+    const formattedTransactions = transactions.map(t =>
       `Tanggal: ${t.date}, Pelanggan: ${t.customer}, Jumlah: ${t.amount}, Status: ${t.status}, Tipe: ${t.type}, Item: ${t.items.map(item => `${item.productName} (${item.quantity} x ${item.price})`).join(', ')}`
     ).join('\n');
 
-    const formattedPurchases = purchases.map(p => 
+    const formattedPurchases = purchases.map(p =>
       `Tanggal: ${p.date}, Supplier: ${p.supplier}, Jumlah: ${p.amount}, Status: ${p.status}, Item: ${p.items.map(item => `${item.productName} (${item.quantity} x ${item.cost})`).join(', ')}`
     ).join('\n');
 
-    const formattedExpenses = expenses.map(e => 
+    const formattedExpenses = expenses.map(e =>
       `Tanggal: ${e.date}, Deskripsi: ${e.description}, Jumlah: ${e.amount}, Kategori: ${e.category}, Status: ${e.status}`
     ).join('\n');
 
@@ -174,10 +177,10 @@ class AIService {
       .reduce((sum, t) => sum + t.amount, 0);
 
     const totalExpensesAmount = financialData.expenses.reduce((sum, e) => sum + e.amount, 0);
-    
+
     // Format data dalam bentuk naratif yang lebih alami
     const dataNarrative = [];
-    
+
     if (totalProducts > 0) {
       dataNarrative.push(`Saat ini Anda memiliki ${totalProducts} produk.`);
       if (products.length > 0) {
@@ -186,7 +189,7 @@ class AIService {
     } else {
       dataNarrative.push('Saat ini belum ada data produk yang tercatat.');
     }
-    
+
     if (totalTransactions > 0) {
       dataNarrative.push(`Anda telah melakukan ${totalTransactions} transaksi, dengan total pemasukan sebesar ${totalRevenue}.`);
       if (transactions.length > 0) {
@@ -195,7 +198,7 @@ class AIService {
     } else {
       dataNarrative.push('Belum ada transaksi penjualan yang tercatat.');
     }
-    
+
     if (totalPurchases > 0) {
       dataNarrative.push(`Anda telah melakukan ${totalPurchases} pembelian.`);
       if (purchases.length > 0) {
@@ -204,7 +207,7 @@ class AIService {
     } else {
       dataNarrative.push('Belum ada pembelian yang tercatat.');
     }
-    
+
     if (totalExpenses > 0) {
       dataNarrative.push(`Anda memiliki ${totalExpenses} beban/pengeluaran dengan total pengeluaran sebesar ${totalExpensesAmount}.`);
       if (expenses.length > 0) {
@@ -213,18 +216,18 @@ class AIService {
     } else {
       dataNarrative.push('Belum ada beban/pengeluaran yang tercatat.');
     }
-    
+
     const narrativeData = dataNarrative.join(' ');
-    
+
     // Deteksi jenis pertanyaan untuk menyesuaikan respons
     const questionLower = question.toLowerCase();
-    const isProductRelated = questionLower.includes('produk') || questionLower.includes('barang') || 
+    const isProductRelated = questionLower.includes('produk') || questionLower.includes('barang') ||
                             questionLower.includes('fashion') || questionLower.includes('pakaian') ||
                             questionLower.includes('menambahkan') || questionLower.includes('buatkan') ||
                             questionLower.includes('harga jual') || questionLower.includes('harga pokok') ||
                             questionLower.includes('kategori');
-                            
-    const isDateRelated = questionLower.includes('hari ini') || questionLower.includes('tanggal') || 
+
+    const isDateRelated = questionLower.includes('hari ini') || questionLower.includes('tanggal') ||
                          questionLower.includes('minggu ini') || questionLower.includes('bulan ini') ||
                          questionLower.includes('terakhir');
 
@@ -236,27 +239,27 @@ class AIService {
     }
 
     return `
-      Kamu adalah asisten keuangan untuk aplikasi akuntansi. Gunakan data lokal berikut sebagai dasar jawabanmu, namun juga gunakan pengetahuan luasmu untuk memberikan informasi yang relevan dan membantu.
-      
+      Kamu adalah asisten keuangan dan teknologi untuk aplikasi akuntansi. Gunakan data lokal berikut sebagai dasar jawabanmu jika relevan, namun tetap gunakan pengetahuan luasmu untuk menjawab pertanyaan-pertanyaan dari pengguna, bahkan jika tidak secara langsung berhubungan dengan data keuangan.
+
       Ringkasan data lokal: ${narrativeData}
-      
+
       Detail Produk (${products.length} dari ${totalProducts}):
       ${formattedProducts || 'Tidak ada data produk lokal'}
-      
+
       Detail Transaksi (${transactions.length} dari ${totalTransactions}):
       ${formattedTransactions || 'Tidak ada data transaksi lokal'}
-      
+
       Detail Pembelian (${purchases.length} dari ${totalPurchases}):
       ${formattedPurchases || 'Tidak ada data pembelian lokal'}
-      
+
       Detail Beban (${expenses.length} dari ${totalExpenses}):
       ${formattedExpenses || 'Tidak ada data beban lokal'}
-      
+
       Pertanyaan Pengguna: ${question}
-      
+
       ${additionalInstruction}
-      
-      Jawablah secara langsung, ringkas dan padat. Gunakan bahasa Indonesia yang santun. Fokus pada inti pertanyaan dan berikan jawaban yang spesifik. Jika data lokal tidak mencukupi, kamu tetap bisa memberikan informasi umum yang relevan berdasarkan pengetahuanmu. Gunakan format narasi yang ringkas, hindari kalimat pembuka yang tidak perlu. Jika pengguna meminta dalam bentuk poin-poin atau daftar, baru gunakan format poin-poin atau daftar. Jangan gunakan tanda bintang (*) atau tanda hubung (-) dalam format jawabanmu kecuali untuk daftar. Jika memberikan informasi umum, sebutkan bahwa itu berdasarkan pengetahuan umum dan mungkin perlu disesuaikan dengan kondisi lokal.
+
+      Jawablah dengan jujur, informatif, dan bermanfaat. Jika kamu tidak tahu jawaban dari data lokal, kamu boleh menggunakan pengetahuan umummu. Jawab semua jenis pertanyaan dengan ramah, tidak peduli seberapa sederhana atau kompleksnya. Gunakan bahasa Indonesia yang santun. Format jawaban sesuaikan dengan jenis pertanyaan - narasi, poin-poin, atau daftar tergantung konteks. Jika pengguna menanyakan sesuatu di luar lingkup data keuangan, kamu tetap boleh menjawab dengan pengetahuan umummu.
     `;
   }
 
@@ -267,10 +270,10 @@ class AIService {
     try {
       const prompt = this.buildPrompt(question, financialData);
       console.log('Prompt yang dikirim:', prompt); // Log untuk debugging
-      
+
       // Tambahkan delay kecil sebelum mengirim permintaan untuk menghindari permintaan terlalu cepat
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       const response = await this.callAI(prompt);
       return response.text;
     } catch (error) {

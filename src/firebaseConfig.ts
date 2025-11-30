@@ -9,15 +9,15 @@ declare const __app_id: string;
 declare const __firebase_config: string;
 declare const __initial_auth_token: string | undefined;
 
-// Fallback konfigurasi Firebase untuk pengembangan lokal atau jika __firebase_config tidak tersedia
+// Konfigurasi Firebase dari environment variables
 const defaultFirebaseConfig = {
-  apiKey: "AIzaSyBbFIkBgz84doCWVrBLBaLXrdSDXBdppPE", // PASTE YOUR ACTUAL API KEY HERE
-  authDomain: "akuakuntan-42af1.firebaseapp.com", // PASTE YOUR ACTUAL authDomain HERE
-  projectId: "akuakuntan-42af1", // PASTE YOUR ACTUAL projectId HERE
-  storageBucket: "akuakuntan-42af1.firebasestorage.app", // PASTE YOUR ACTUAL storageBucket HERE
-  messagingSenderId: "546238538301", // PASTE YOUR ACTUAL messagingSenderId HERE
-  appId: "1:546238538301:web:e7d078262e66e383f44054", // PASTE YOUR ACTUAL appId HERE
-  measurementId: "G-6H2FCXX30J" // Opsional, PASTE YOUR ACTUAL measurementId HERE
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: "G-6H2FCXX30J" // Opsional
 };
 
 // Default value for appId when running locally outside of Canvas environment

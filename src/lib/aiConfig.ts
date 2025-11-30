@@ -9,15 +9,19 @@ interface AIConfig {
 
 // Konfigurasi default
 const defaultConfig: AIConfig = {
-  apiKey: import.meta.env.VITE_GOOGLE_AI_API_KEY || 'AIzaSyB_HIgR099a3eVmFQnzB70K23yuJirze9c',
+  apiKey: import.meta.env.VITE_GOOGLE_AI_API_KEY || undefined,
   baseUrl: 'https://generativelanguage.googleapis.com/v1beta/models',
-  model: 'gemini-2.5-flash',
+  model: 'gemini-2.5-pro',
   maxRetries: 3,
   timeout: 30000, // 30 detik
 };
 
 // Fungsi untuk mendapatkan konfigurasi
 export const getAIConfig = (): AIConfig => {
+  if (!defaultConfig.apiKey) {
+    console.error('VITE_GOOGLE_AI_API_KEY environment variable is not set. Please add it to your .env file.');
+  }
+
   return {
     ...defaultConfig,
     apiKey: defaultConfig.apiKey,
